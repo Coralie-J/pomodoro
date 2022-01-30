@@ -243,7 +243,7 @@ class App extends React.Component {
                         {this.state.timerMinutes} : {this.state.timerSecondes < 10 ? `0${this.state.timerSecondes}`: this.state.timerSecondes} </p>
                     </div>
 
-                    <input type="button" value="Pause" onClick={this.stopTimer} style={styles.button} />
+                    <input type="button" value="Stop" onClick={this.stopTimer} style={styles.button} />
                     <input type="button" value="Start" onClick={this.startTimer} style={styles.button} disabled={this.state.disableStart} />
                     <input type="button" value="Reset" onClick={this.resetTimer} style={styles.button} />
                 </div>
