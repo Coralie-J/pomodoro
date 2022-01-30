@@ -1,5 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
+import logo from './tomate.png';
 import React from 'react';
 
 const styles = {
@@ -24,17 +24,45 @@ const styles = {
         backgroundColor: 'black',
         color: 'white',
         fontSize:'14px',
-        borderRadius: '10px'
+        borderRadius: '10px',
+        marginTop: '7px'
     },
     form:{
         width: '100%',
         textAlign: "center",
+        marginBottom: '50px'
     },
     form_div:{
         width: '20%',
         backgroundColor: 'white',
         height: '100%'
-    }
+    },
+    titre_form : {
+        marginBottom: '40px',
+        marginTop: '60px'
+    },
+    info: {
+        marginLeft: '10px'
+    },
+    logo: {
+        width: '8%',
+        verticalAlign: 'top'
+    },
+    p_test:{
+        textAlign:'right',
+        width: '80%',
+    },
+    label:{
+        marginRight: '15px'
+    },
+    paragraphe_time:{
+        marginLeft: '10px',
+        width: '80%',
+        margin: 'auto',
+        marginTop:'20px',
+        display: 'flex',
+        justifyContent:'space-between'
+    },
 };
 
 const styles_form = {
@@ -43,12 +71,6 @@ const styles_form = {
     textAlign: "center"
 };
 
-const style_div = {
-    height: '100%',
-    display: 'flex',
-    backgroundColor: '#00C49A'
-}
-
 let timer = 0;
 
 class App extends React.Component {
@@ -56,7 +78,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             timerMinutes: 0,
-            timerSecondes: 10,
+            timerSecondes: 21,
             workTimeMinutes: 30,
             workTimeSecondes: 0,
             breaktimeMinutes: 2,
@@ -68,9 +90,9 @@ class App extends React.Component {
             },
             text: 'Working Time',
             backgroundStyle:{
+                backgroundColor: '#00C49A',
                 height: '100%',
-                display: 'flex',
-                backgroundColor: '#00C49A'
+                display: 'flex'
             }
         };
 
@@ -90,18 +112,34 @@ class App extends React.Component {
         let breakTimeSecondesSaisie = document.getElementById('breaktimeSecondes').value;
 
         if (workTimeMinutesSaisie && workTimeSecondesSaisie){
-            this.setState({workTimeMinutes: workTimeMinutesSaisie});
-            this.setState({workTimeSecondes: workTimeSecondesSaisie});
+
+            workTimeMinutesSaisie = parseInt(workTimeMinutesSaisie);
+            workTimeSecondesSaisie = parseInt(workTimeSecondesSaisie)
+
+            if (workTimeMinutesSaisie > -1 && workTimeSecondesSaisie < 60 && workTimeSecondesSaisie > -1){
+                this.setState({workTimeMinutes: workTimeMinutesSaisie});
+                this.setState({workTimeSecondes: workTimeSecondesSaisie});
+            } else
+                alert("Le temps de travail n'est pas au bon format");
         }
 
         if (breaktimeMinutesSaisie && breakTimeSecondesSaisie){
-            this.setState({breaktimeMinutes: breaktimeMinutesSaisie});
-            this.setState({breaktimeSecondes: breakTimeSecondesSaisie});
+
+            breaktimeMinutesSaisie = parseInt(breaktimeMinutesSaisie);
+            breakTimeSecondesSaisie = parseInt(breakTimeSecondesSaisie)
+
+            if (breaktimeMinutesSaisie > -1 && breakTimeSecondesSaisie < 60 && breakTimeSecondesSaisie > -1){
+                this.setState({breaktimeMinutes: breaktimeMinutesSaisie});
+                this.setState({breaktimeSecondes: breakTimeSecondesSaisie});
+            }else
+                alert("Le temps de travail n'est pas au bon format");
         }
     }
 
     changeColor(color){
-        this.setState({alerteStyle: {color: color, fontSize: '120px'}});
+        let copyAlerteStyle = { ...this.state.alerteStyle};
+        copyAlerteStyle.color = color;
+        this.setState({alerteStyle: copyAlerteStyle});
     }
 
     changeTime(){
@@ -113,35 +151,31 @@ class App extends React.Component {
                 this.setState({timerMinutes: this.state.workTimeMinutes});
                 this.setState({timerSecondes: this.state.workTimeSecondes});
                 this.setState({text: 'Working Time'});
-                this.setState({backgroundStyle: {
-                    height: '100%',
-                    display: 'flex',
-                    backgroundColor: '#00C49A'}
-                });
+
+                let copybackgroundstyle = { ...this.state.backgroundStyle};
+                copybackgroundstyle.backgroundColor = '#00C49A';
+
+                this.setState({backgroundStyle: copybackgroundstyle});
 
             } else {
 
                 this.setState({timerMinutes: this.state.breaktimeMinutes});
                 this.setState({timerSecondes: this.state.breaktimeSecondes});
                 this.setState({text: "Let's take a break"});
-                this.setState({backgroundStyle: {
-                    height: '100%',
-                    display: 'flex',
-                    backgroundColor: '#A288E3'}
-                });
 
+                let copybackgroundstyle = { ...this.state.backgroundStyle};
+                copybackgroundstyle.backgroundColor = '#A288E3';
+                this.setState({backgroundStyle: copybackgroundstyle});
             }
+            this.changeColor('black');
+            return;
         }
 
-        if (this.state.timerSecondes < 21 && this.state.timerMinutes == 0)
+        if (this.state.timerSecondes < 22 && this.state.timerMinutes == 0)
             this.changeColor('red');
-        else{
-            if (this.state.alerteStyle.color == 'red')
-                this.changeColor('black');
-        }
 
         if (this.state.timerSecondes == 0 && this.state.timerMinutes != 0){
-                this.state.timerSecondes = 60;
+                this.setState({timerSecondes: 60});
                 if (this.state.timerMinutes > 0)
                     this.setState({timerMinutes: this.state.timerMinutes - 1});
         }
@@ -163,32 +197,40 @@ class App extends React.Component {
     resetTimer(){
         this.setState({timerSecondes: this.state.workTimeSecondes});
         this.setState({timerMinutes: this.state.workTimeMinutes });
-        this.setState({backgroundStyle: {
-            height: '100%',
-            display: 'flex',
-            backgroundColor: '#00C49A'}
-        });
+        let copybackgroundstyle = { ...this.state.backgroundStyle};
+        copybackgroundstyle.backgroundColor = '#00C49A';
+        this.setState({backgroundStyle: copybackgroundstyle});
     }
 
     render() {
         return (
             <div style={this.state.backgroundStyle}>
                 <div style={styles.form_div}>
+                    <h1 style={styles.info}><img src={logo} alt="logo" style={styles.logo}/>Pomodoro </h1>
                     <form style={styles.form}>
-                        <p>
-                            <label for="worktimeMinutes">Temps de travail : </label>
-                            <input type="number" placeholder="30" id="worktimeMinutes" name="worktimeMinutes" style={styles_form}/>
-                            <span> : </span>
-                            <input type="number" placeholder="0" id="worktimeSecondes" name="workTimeSecondes" style={styles_form} max="60"/>
-                        </p>
-                        <p>
-                            <label for="breaktimeMinutes"> Temps de pause : </label>
-                            <input type="number" id="breaktimeMinutes" placeholder="10" name="breaktimeMinutes" style={styles_form} />
-                            <span> : </span>
-                            <input type="number" id="breaktimeSecondes" name="breakTimeSecondes" placeholder="0" style={styles_form} max="60"/>
-                        </p>
+                        <h3 style={styles.titre_form}> Change Working/Break time </h3>
+                            <p style={styles.p_test}>
+                                <label style={styles.label} for="worktimeMinutes">Working Time : </label>
+                                <input type="number" placeholder="30" id="worktimeMinutes" name="worktimeMinutes" style={styles_form} min="0"/>
+                                <span> : </span>
+                                <input type="number" placeholder="0" id="worktimeSecondes" name="workTimeSecondes" style={styles_form} min="0" max="60"/>
+                            </p>
+                            <p style={styles.p_test}>
+                                <label style={styles.label} for="breaktimeMinutes"> Break Time : </label>
+                                <input type="number" id="breaktimeMinutes" placeholder="10" name="breaktimeMinutes" style={styles_form}  min="0" />
+                                <span> : </span>
+                                <input type="number" id="breaktimeSecondes" name="breakTimeSecondes" placeholder="0" style={styles_form} min="0" max="60"/>
+                            </p>
+
                         <input type="button" value="Submit" onClick={this.validateTime} style={styles.button} id="btn_valider" />
                     </form>
+
+                    <p style={styles.paragraphe_time}>
+                        <span>Working Time : </span> {this.state.workTimeMinutes} :
+                            {this.state.workTimeSecondes < 10 ? `0${this.state.workTimeSecondes}`: this.state.workTimeSecondes} </p>
+
+                    <p style={styles.paragraphe_time}> <span> Break time: </span> {this.state.breaktimeMinutes} :
+                        {this.state.breaktimeSecondes < 10 ? `0${this.state.breaktimeSecondes}`: this.state.breaktimeSecondes}  </p>
                 </div>
 
                 <div style={styles}>
